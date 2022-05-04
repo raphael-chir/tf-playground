@@ -10,7 +10,7 @@
 <tbody>
 <tr>
 <td style="text-align:left;"><strong>terraform</strong></td>
-<td style="text-align:left;">Terraform &gt;= 1.1.7 (an alias tf is create for terraform cli)</td>
+<td style="text-align:left;">Terraform &gt;= 1.1.9 (an alias tf is create for terraform cli)</td>
 </tr>
 <tr>
 <td style="text-align:left;"><strong>aws</strong></td>
@@ -20,7 +20,7 @@
 </table>
 <h2 id="first-check">First check</h2>
 <blockquote>
-  <p>PLease check that everything is alright. Open a terminal in your sandbox and test environment</p>
+  <p>Please check that everything is alright. Open a terminal in your sandbox and test environment</p>
 </blockquote>
 <p>Open a terminal and check terraform cli</p>
 <pre><code class="bash language-bash">sandbox@sse-sandbox-457lgm:/sandbox$ terraform version
@@ -35,7 +35,7 @@ AWS Access Key ID [None]: XXXXXXXXXXXXXX
 AWS Secret Access Key [None]: XXXxxxxxxxxxxxxxxxxxXXXxxxxxxxxxXXxxxxxxx
 Default region name [None]: eu-north-1
 Default output format [None]:</code></pre>
-<p>Generate html page from Readme.md</p>
+<p>Generate html page from Readme.md to show in integrated browser (CodeSandbox)</p>
 <pre><code class="bash language-bash">sandbox@sse-sandbox-457lgm:/sandbox$ node md2html.js</code></pre>
 <h2 id="terraform-backend">Terraform backend</h2>
 <p>All terraform state files are stored and shared in a dedicated S3 bucket. Create if needed your own bucket.</p>
@@ -49,6 +49,13 @@ aws s3api put-bucket-tagging --bucket a-tfstate-rch --tagging 'TagSet=[{Key=Owne
     key     = "myproject-tfstate"
     bucket  = "a-tfstate-rch"
   }
+}</code></pre>
+<h2 id="tag-tag-tag-">Tag tag tag, ..</h2>
+<p>More than a best practice, it is essential for inventory resources, cost explorer, etc .. Open terraform.tfvars and update these values</p>
+<pre><code class="bash language-bash">resource_tags = {
+  project     = "myproject"
+  environment = "staging-rch"
+  owner       = "raphael.chir@couchbase.com"
 }</code></pre>
 <h2 id="ssh-keys">SSH Keys</h2>
 <p>We need to generate key pair in order to ssh into instances. Create a .ssh folder in tf-playground.<br />
@@ -64,6 +71,8 @@ SSH supports several public key algorithms for authentication keys. These includ
 ssh-keygen -t dsa
 ssh-keygen -t ecdsa -b 521
 ssh-keygen -t ed25519</code></pre>
+<p>Run this command, if necessary, to ensure your key is not publicly viewable.</p>
+<pre><code class="bash language-bash">chmod 400 rch-cb-nodes-key.pem</code></pre>
 <h2 id="how-to-choose-your-os-ami">How to choose your OS AMI</h2>
 <p>You can just copy from aws console the <strong>ami-id</strong> needed.  <br />
 e.g : '<em>Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-04-20</em>' is <strong>ami-01ded35841bc93d7f</strong></p>
@@ -118,3 +127,7 @@ Based on this metadata structure below or see<br />
 <pre><code class="bash language-bash">aws ec2 describe-images --region eu-north-1 --query "Images[*].[Description,ImageId]" --filters"Name=name,Values=ubuntu*" "Name=creation-date,Values=2022*" "Name=architecture,Values=x86_64" "Name=root-device-type,Values=ebs" "Name=block-device-mapping.volume-type,Values=gp2" "Name=image-type,Values=machine" "Name=state,Values=available" "Name=description,Values=*Ubuntu*22.04*"</code></pre>
 <p>Or write it into a file</p>
 <pre><code class="bash language-bash">echo $(aws ec2 describe-images --region eu-north-1 --query "Images[*].[Description,ImageId]" --filters "Name=name,Values=ubuntu*" "Name=creation-date,Values=2022*" "Name=architecture,Values=x86_64" "Name=root-device-type,Values=ebs" "Name=block-device-mapping.volume-type,Values=gp2" "Name=image-type,Values=machine" "Name=state,Values=available" "Name=description,Values=*Ubuntu*22.04*")&gt;ami.json</code></pre>
+<p>Use list to see all namespaces</p>
+<pre><code class="bash language-bash">aws ssm get-parameters-by-path \
+--path /aws/service/ami-amazon-linux-latest \
+--query 'Parameters[].Name' --region eu-north-1</code></pre>

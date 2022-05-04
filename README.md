@@ -101,6 +101,12 @@ ssh-keygen -t ecdsa -b 521
 ssh-keygen -t ed25519
 ```
 
+Run this command, if necessary, to ensure your key is not publicly viewable.
+
+```bash
+chmod 400 rch-cb-nodes-key.pem
+```
+
 ## How to choose your OS AMI
 
 You can just copy from aws console the **ami-id** needed.  
@@ -167,4 +173,12 @@ Or write it into a file
 
 ```bash
 echo $(aws ec2 describe-images --region eu-north-1 --query "Images[*].[Description,ImageId]" --filters "Name=name,Values=ubuntu*" "Name=creation-date,Values=2022*" "Name=architecture,Values=x86_64" "Name=root-device-type,Values=ebs" "Name=block-device-mapping.volume-type,Values=gp2" "Name=image-type,Values=machine" "Name=state,Values=available" "Name=description,Values=*Ubuntu*22.04*")>ami.json
+```
+
+Use list to see all namespaces
+
+```bash
+aws ssm get-parameters-by-path \
+--path /aws/service/ami-amazon-linux-latest \
+--query 'Parameters[].Name' --region eu-north-1
 ```
