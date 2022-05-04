@@ -3,15 +3,11 @@
 <table>
 <thead>
 <tr>
-<th id="" style="text-align:left;"></th>
-<th id="" style="text-align:left;"></th>
+<th id="![labs](https://learn.hashicorp.com/_next/static/images/color-c0fe8380afabc1c58f5601c1662a2e2d.svg)" style="text-align:left;"><img src="https://learn.hashicorp.com/_next/static/images/color-c0fe8380afabc1c58f5601c1662a2e2d.svg" alt="Labs" /></th>
+<th id="this_demo_shows_you_how_to_automate_your_architecture_implementation_in_a_**cloud_devops**_approach_with_[terraform](https://www.terraform.io/)." style="text-align:left;">This demo shows you how to automate your architecture implementation in a <strong>Cloud DevOps</strong> approach with <a href="https://www.terraform.io/">Terraform</a>.</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;"><img src="https://learn.hashicorp.com/_next/static/images/color-c0fe8380afabc1c58f5601c1662a2e2d.svg" alt="Labs" /></td>
-<td style="text-align:left;">This demo shows you how to automate your architecture implementation in a <strong>Cloud DevOps</strong> approach with <a href="https://www.terraform.io/">Terraform</a>. <em>Deploy on classical AWS IaaS, use fully managed services, and deploy everywhere you want.</em></td>
-</tr>
 <tr>
 <td style="text-align:left;"><strong>terraform</strong></td>
 <td style="text-align:left;">Terraform &gt;= 1.1.7 (an alias tf is create for terraform cli)</td>
@@ -68,3 +64,57 @@ SSH supports several public key algorithms for authentication keys. These includ
 ssh-keygen -t dsa
 ssh-keygen -t ecdsa -b 521
 ssh-keygen -t ed25519</code></pre>
+<h2 id="how-to-choose-your-os-ami">How to choose your OS AMI</h2>
+<p>You can just copy from aws console the <strong>ami-id</strong> needed.  <br />
+e.g : '<em>Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-04-20</em>' is <strong>ami-01ded35841bc93d7f</strong></p>
+<p>For specific search based on filters you can also use this command.<br />
+Based on this metadata structure below or see<br />
+<a href="https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/describe-images.html">aws ec2 describe-images details</a>  <br />
+<a href="https://docs.aws.amazon.com/sdkfornet1/latest/apidocs/html/P_Amazon_EC2_Model_DescribeImagesRequest_Filter.htm">Another link</a></p>
+<pre><code class="bash language-bash">[
+    {
+        "Architecture": "x86_64",
+        "CreationDate": "2022-04-21T14:55:48.000Z",
+        "ImageId": "ami-01ded35841bc93d7f",
+        "ImageLocation": "099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20220420",
+        "ImageType": "machine",
+        "Public": true,
+        "OwnerId": "099720109477",
+        "PlatformDetails": "Linux/UNIX",
+        "UsageOperation": "RunInstances",
+        "State": "available",
+        "BlockDeviceMappings": [
+            {
+                "DeviceName": "/dev/sda1",
+                "Ebs": {
+                    "DeleteOnTermination": true,
+                    "SnapshotId": "snap-0bc2203755d33f5f6",
+                    "VolumeSize": 8,
+                    "VolumeType": "gp2",
+                    "Encrypted": false
+                }
+            },
+            {
+                "DeviceName": "/dev/sdc",
+                "VirtualName": "ephemeral1"
+            },
+            {
+                "DeviceName": "/dev/sdb",
+                "VirtualName": "ephemeral0"
+            }
+        ],
+        "Description": "Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-04-20",
+        "EnaSupport": true,
+        "Hypervisor": "xen",
+        "Name": "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20220420",
+        "RootDeviceName": "/dev/sda1",
+        "RootDeviceType": "ebs",
+        "SriovNetSupport": "simple",
+        "VirtualizationType": "hvm",
+        "DeprecationTime": "2024-04-21T14:55:48.000Z"
+    }
+]</code></pre>
+<p>You can find specific ami with this command</p>
+<pre><code class="bash language-bash">aws ec2 describe-images --region eu-north-1 --query "Images[*].[Description,ImageId]" --filters"Name=name,Values=ubuntu*" "Name=creation-date,Values=2022*" "Name=architecture,Values=x86_64" "Name=root-device-type,Values=ebs" "Name=block-device-mapping.volume-type,Values=gp2" "Name=image-type,Values=machine" "Name=state,Values=available" "Name=description,Values=*Ubuntu*22.04*"</code></pre>
+<p>Or write it into a file</p>
+<pre><code class="bash language-bash">echo $(aws ec2 describe-images --region eu-north-1 --query "Images[*].[Description,ImageId]" --filters "Name=name,Values=ubuntu*" "Name=creation-date,Values=2022*" "Name=architecture,Values=x86_64" "Name=root-device-type,Values=ebs" "Name=block-device-mapping.volume-type,Values=gp2" "Name=image-type,Values=machine" "Name=state,Values=available" "Name=description,Values=*Ubuntu*22.04*")&gt;ami.json</code></pre>

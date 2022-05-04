@@ -2,15 +2,14 @@
 
 ## Keep control on your cloud resources
 
-|                                                                                                     |                                                                                                                                                                                                                                              |
-| :-------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ![Labs](https://learn.hashicorp.com/_next/static/images/color-c0fe8380afabc1c58f5601c1662a2e2d.svg) | This demo shows you how to automate your architecture implementation in a **Cloud DevOps** approach with [Terraform](https://www.terraform.io/). _Deploy on classical AWS IaaS, use fully managed services, and deploy everywhere you want._ |
-| **terraform**                                                                                       | Terraform >= 1.1.7 (an alias tf is create for terraform cli)                                                                                                                                                                                 |
-| **aws**                                                                                             | aws cli v2 (WARNING : you are responsible of your access key, don't forget to deactivate or suppress it in your aws account !)                                                                                                               |
+| ![Labs](https://learn.hashicorp.com/_next/static/images/color-c0fe8380afabc1c58f5601c1662a2e2d.svg) | This demo shows you how to automate your architecture implementation in a **Cloud DevOps** approach with [Terraform](https://www.terraform.io/). |
+| :-------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **terraform**                                                                                       | Terraform >= 1.1.9 (an alias tf is create for terraform cli)                                                                                     |
+| **aws**                                                                                             | aws cli v2 (WARNING : you are responsible of your access key, don't forget to deactivate or suppress it in your aws account !)                   |
 
 ## First check
 
-> PLease check that everything is alright. Open a terminal in your sandbox and test environment
+> Please check that everything is alright. Open a terminal in your sandbox and test environment
 
 Open a terminal and check terraform cli
 
@@ -88,4 +87,72 @@ ssh-keygen -t rsa -b 4096
 ssh-keygen -t dsa
 ssh-keygen -t ecdsa -b 521
 ssh-keygen -t ed25519
+```
+
+## How to choose your OS AMI
+
+You can just copy from aws console the **ami-id** needed.  
+e.g : '_Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-04-20_' is **ami-01ded35841bc93d7f**
+
+For specific search based on filters you can also use this command.
+Based on this metadata structure below or see
+[aws ec2 describe-images details](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/describe-images.html)  
+[Another link](https://docs.aws.amazon.com/sdkfornet1/latest/apidocs/html/P_Amazon_EC2_Model_DescribeImagesRequest_Filter.htm)
+
+```bash
+[
+    {
+        "Architecture": "x86_64",
+        "CreationDate": "2022-04-21T14:55:48.000Z",
+        "ImageId": "ami-01ded35841bc93d7f",
+        "ImageLocation": "099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20220420",
+        "ImageType": "machine",
+        "Public": true,
+        "OwnerId": "099720109477",
+        "PlatformDetails": "Linux/UNIX",
+        "UsageOperation": "RunInstances",
+        "State": "available",
+        "BlockDeviceMappings": [
+            {
+                "DeviceName": "/dev/sda1",
+                "Ebs": {
+                    "DeleteOnTermination": true,
+                    "SnapshotId": "snap-0bc2203755d33f5f6",
+                    "VolumeSize": 8,
+                    "VolumeType": "gp2",
+                    "Encrypted": false
+                }
+            },
+            {
+                "DeviceName": "/dev/sdc",
+                "VirtualName": "ephemeral1"
+            },
+            {
+                "DeviceName": "/dev/sdb",
+                "VirtualName": "ephemeral0"
+            }
+        ],
+        "Description": "Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-04-20",
+        "EnaSupport": true,
+        "Hypervisor": "xen",
+        "Name": "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20220420",
+        "RootDeviceName": "/dev/sda1",
+        "RootDeviceType": "ebs",
+        "SriovNetSupport": "simple",
+        "VirtualizationType": "hvm",
+        "DeprecationTime": "2024-04-21T14:55:48.000Z"
+    }
+]
+```
+
+You can find specific ami with this command
+
+```bash
+aws ec2 describe-images --region eu-north-1 --query "Images[*].[Description,ImageId]" --filters"Name=name,Values=ubuntu*" "Name=creation-date,Values=2022*" "Name=architecture,Values=x86_64" "Name=root-device-type,Values=ebs" "Name=block-device-mapping.volume-type,Values=gp2" "Name=image-type,Values=machine" "Name=state,Values=available" "Name=description,Values=*Ubuntu*22.04*"
+```
+
+Or write it into a file
+
+```bash
+echo $(aws ec2 describe-images --region eu-north-1 --query "Images[*].[Description,ImageId]" --filters "Name=name,Values=ubuntu*" "Name=creation-date,Values=2022*" "Name=architecture,Values=x86_64" "Name=root-device-type,Values=ebs" "Name=block-device-mapping.volume-type,Values=gp2" "Name=image-type,Values=machine" "Name=state,Values=available" "Name=description,Values=*Ubuntu*22.04*")>ami.json
 ```

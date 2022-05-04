@@ -13,6 +13,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # IDE config
 sandbox.config.json
 .codesandbox/
+.codesandbox/workspace.json
 
 # Runtime data
 pids
