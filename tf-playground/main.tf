@@ -16,10 +16,10 @@ provider "aws" {
   region = var.region_target
 }
 
-# Create key-pair for logging into ec2 instance
+# Create a key-pair for logging into ec2 instances
 resource "aws_key_pair" "this" {
-  key_name   = "rch-cb-nodes-key"
-  public_key = file(var.ssh_public_key_path)
+  key_name   = join("-",[var.resource_tags["project"],var.resource_tags["environment"]])
+  public_key = file(join("",[var.ssh_keys_path,".pub"]))
   tags = {
     Name        = join("-",["key-pair", var.resource_tags["project"],var.resource_tags["environment"]])
     Project     = var.resource_tags["project"]

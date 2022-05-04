@@ -9,9 +9,9 @@
 
 ## First check
 
-> Please check that everything is alright. Open a terminal in your sandbox and test environment
+Please check that everything is alright. Open a terminal in your sandbox and test environment
 
-Open a terminal and check terraform cli
+### Open a terminal and check terraform cli
 
 ```bash
 sandbox@sse-sandbox-457lgm:/sandbox$ terraform version
@@ -19,7 +19,7 @@ Terraform v1.1.9
 on linux_amd64
 ```
 
-Check aws cli
+### Check aws cli
 
 ```bash
 sandbox@sse-sandbox-457lgm:/sandbox$ aws --version
@@ -35,6 +35,8 @@ AWS Secret Access Key [None]: XXXxxxxxxxxxxxxxxxxxXXXxxxxxxxxxXXxxxxxxx
 Default region name [None]: eu-north-1
 Default output format [None]:
 ```
+
+### Doc as code
 
 Generate html page from Readme.md to show in integrated browser (CodeSandbox)
 
@@ -78,10 +80,26 @@ resource_tags = {
 
 ## SSH Keys
 
+### Generate
+
 We need to generate key pair in order to ssh into instances. Create a .ssh folder in tf-playground.
 [SSH Academy](https://www.ssh.com/academy/ssh/keygen#creating-an-ssh-key-pair-for-user-authentication)
 
-Choosing an Algorithm and Key Size
+Open a terminal and paste this default command
+
+```bash
+ssh-keygen -q -t rsa -b 4096 -f /sandbox/tf-playground/.ssh/zkey -N ''
+```
+
+Change if needed ssh_keys_path variable in terraform.tvars  
+Run this command, if necessary, to ensure your key is not publicly viewable.
+
+```bash
+chmod 400 zkey
+```
+
+### Choosing an Algorithm and Key Size
+
 SSH supports several public key algorithms for authentication keys. These include:
 
 **rsa** - an old algorithm based on the difficulty of factoring large numbers. A key size of at least 2048 bits is recommended for RSA; 4096 bits is better. RSA is getting old and significant advances are being made in factoring. Choosing a different algorithm may be advisable. It is quite possible the RSA algorithm will become practically breakable in the foreseeable future. All SSH clients support this algorithm.
@@ -101,16 +119,14 @@ ssh-keygen -t ecdsa -b 521
 ssh-keygen -t ed25519
 ```
 
-Run this command, if necessary, to ensure your key is not publicly viewable.
-
-```bash
-chmod 400 rch-cb-nodes-key.pem
-```
-
 ## How to choose your OS AMI
+
+### From AWS console
 
 You can just copy from aws console the **ami-id** needed.  
 e.g : '_Canonical, Ubuntu, 22.04 LTS, amd64 jammy image build on 2022-04-20_' is **ami-01ded35841bc93d7f**
+
+### Advanced search
 
 For specific search based on filters you can also use this command.
 Based on this metadata structure below or see

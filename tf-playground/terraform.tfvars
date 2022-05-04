@@ -10,5 +10,4 @@ resource_tags = {
   owner       = "raphael.chir@couchbase.com"
 }
 
-ssh_public_key_path = "/sandbox/tf-playground/.ssh/id_rsa.pub"
-ssh_private_key_path = "/sandbox/tf-playground/.ssh/id_rsa"
+ssh_keys_path = "/sandbox/tf-playground/.ssh/zkey"

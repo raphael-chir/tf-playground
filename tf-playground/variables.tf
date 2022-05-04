@@ -12,12 +12,7 @@ variable "resource_tags" {
   type        = map(string)
 }
 
-variable "ssh_public_key_path" {
-  description = "SSH public key path"
-  type        = string
-}
-
-variable "ssh_private_key_path" {
-  description = "SSH private key path - WARN just for ephemeral demo usage ! No prod concern"
+variable "ssh_keys_path" {
+  description = "SSH keys path"
   type        = string
 }
