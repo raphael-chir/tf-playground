@@ -12,8 +12,8 @@ variable "base_name" {
   type        = string
 }
 
-variable "instance_ami_path" {
-  description = "Instance AMI ssm parameters path"
+variable "instance_ami_id" {
+  description = "Instance AMI id"
   type        = string
 }
 

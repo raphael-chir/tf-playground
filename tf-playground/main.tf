@@ -30,10 +30,10 @@ resource "aws_key_pair" "this" {
 
 # Call network module
 module "network" {
-  source                  = "./modules/network"
-  resource_tags           = var.resource_tags
-  vpc_cidr_block          = "10.0.0.0/28"
-  public_subnet_cidr_block = "10.0.0.0/28"
+  source                    = "./modules/network"
+  resource_tags             = var.resource_tags
+  vpc_cidr_block            = "10.0.0.0/28"
+  public_subnet_cidr_block  = "10.0.0.0/28"
 }
 
 # Call compute module
@@ -41,8 +41,8 @@ module "node01" {
   source                 = "./modules/compute"
   depends_on             = [module.network]
   resource_tags          = var.resource_tags
-  base_name              = "node01"
-  instance_ami_path      = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+  base_name              = "rdbms"
+  instance_ami_id        = "ami-01ded35841bc93d7f"
   instance_type          = "t3.medium"
   user_data_script_path  = "scripts/init-instance.sh"
   user_data_args         = {services="data"}

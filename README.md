@@ -36,7 +36,7 @@ Default region name [None]: eu-north-1
 Default output format [None]:
 ```
 
-Generate html page from Readme.md
+Generate html page from Readme.md to show in integrated browser (CodeSandbox)
 
 ```bash
 sandbox@sse-sandbox-457lgm:/sandbox$ node md2html.js
@@ -61,6 +61,18 @@ terraform {
     key     = "myproject-tfstate"
     bucket  = "a-tfstate-rch"
   }
+}
+```
+
+## Tag tag tag, ..
+
+More than a best practice, it is essential for inventory resources, cost explorer, etc .. Open terraform.tfvars and update these values
+
+```bash
+resource_tags = {
+  project     = "myproject"
+  environment = "staging-rch"
+  owner       = "raphael.chir@couchbase.com"
 }
 ```
 
