@@ -44,6 +44,7 @@ module "node01" {
   base_name              = "rdbms"
   instance_ami_id        = "ami-01ded35841bc93d7f"
   instance_type          = "t3.medium"
+  root_volume_size       = 8
   user_data_script_path  = "scripts/init-instance.sh"
   user_data_args         = {services="data"}
   ssh_public_key_name    = aws_key_pair.this.key_name
