@@ -4,7 +4,7 @@
 
 | ![Labs](https://learn.hashicorp.com/_next/static/images/color-c0fe8380afabc1c58f5601c1662a2e2d.svg) | This demo shows you how to automate your architecture implementation in a **Cloud DevOps** approach with [Terraform](https://www.terraform.io/). |
 | :-------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **terraform**                                                                                       | Terraform >= 1.1.9 (an alias tf is create for terraform cli)                                                                                     |
+| **terraform**                                                                                       | Terraform >= 1.2.3 (an alias tf is create for terraform cli)                                                                                     |
 | **aws**                                                                                             | aws cli v2 (WARNING : you are responsible of your access key, don't forget to deactivate or suppress it in your aws account !)                   |
 
 ## First check

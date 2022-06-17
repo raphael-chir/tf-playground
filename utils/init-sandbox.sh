@@ -25,9 +25,9 @@ if [ -d "$TF_CLI" ]; then
   echo '+ Terraforn directory exists and must be operational. If not remove with rm -fR '$TF_CLI
 else
   mkdir $TF_CLI
-  curl "https://releases.hashicorp.com/terraform/1.1.9/terraform_1.1.9_linux_amd64.zip" -o "$TF_CLI/terraform_1.1.9_linux_amd64.zip"
-  unzip $TF_CLI/terraform_1.1.9_linux_amd64.zip -d $TF_CLI
-  rm -f $TF_CLI/terraform_1.1.9_linux_amd64.zip
+  curl "https://releases.hashicorp.com/terraform/1.2.3/terraform_1.2.3_linux_amd64.zip" -o "$TF_CLI/terraform_1.2.3_linux_amd64.zip"
+  unzip $TF_CLI/terraform_1.2.3_linux_amd64.zip -d $TF_CLI
+  rm -f $TF_CLI/terraform_1.2.3_linux_amd64.zip
 fi
 
 echo '+ Generate new ~/.bashrc file'
